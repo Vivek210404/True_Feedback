@@ -18,7 +18,7 @@ const Navbar = () => {
           <>
             <span className="mr-4">Welcome, {user.username || user.email}</span>
             <Button
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: "/" })}
               className="w-full md:w-auto bg-slate-100 text-black"
               variant="outline"
             >
