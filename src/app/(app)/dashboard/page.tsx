@@ -102,7 +102,7 @@ function page() {
   };
 
   if (!session || !session.user) {
-    return <div>Please Login</div>;
+    return <div></div>;
   }
 
   const { username } = session.user as User;
