@@ -6,8 +6,8 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/options';
 
 export async function GET(request: Request) {
-    await dbConnect();
-    const session = await getServerSession(authOptions);
+  await dbConnect();
+  const session = await getServerSession(authOptions);
   const _user: User = session?.user;
 
   if (!session || !_user) {
@@ -21,7 +21,12 @@ export async function GET(request: Request) {
   try {
     const user = await UserModel.aggregate([
       { $match: { _id: userId } },
-      { $unwind: '$messages' },
+      {
+        $unwind: {
+          path: "$messages",
+          preserveNullAndEmptyArrays: true
+        }
+      },
       { $sort: { 'messages.createdAt': -1 } },
       { $group: { _id: '$_id', messages: { $push: '$messages' } } },
     ]).exec();
