@@ -1,30 +1,34 @@
-import {resend} from '@/lib/resend'
-import VerificationEmail from '../../emails/VerificationEmail'
-import { ApiResponse } from '@/types/ApiResponse'
+import { transporter } from "@/lib/mail";
+import VerificationEmail from "../../emails/VerificationEmail";
+import { ApiResponse } from "@/types/ApiResponse";
+import { render } from "@react-email/render";
 
 export async function sendVerificationEmail(
-    email: string,
-    username: string,
-    verifyCode: string
+  email: string,
+  username: string,
+  verifyCode: string
 ): Promise<ApiResponse> {
-    try {
-        await resend.emails.send({
-            from: "delivered@resend.dev",
-            to: email,
-            subject: "True Feedback | Verification Code",
-            react: VerificationEmail({ username, otp: verifyCode }),
-        });
+  try {
+    const emailHtml = await render(
+      VerificationEmail({ username, otp: verifyCode })
+    );
 
-        return {
-            success: true,
-            message: "Verification email send successfully"
-        }
-    }
-    catch (emailError) {
-        console.error("Error sending verification email", emailError);
-        return {
-            success: false,
-            message: 'Failed to send verification email',
-        }
-    }
+    await transporter.sendMail({
+      from: `"True Feedback" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "True Feedback | Verification Code",
+      html: emailHtml,
+    });
+
+    return {
+      success: true,
+      message: "Verification email sent successfully",
+    };
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    return {
+      success: false,
+      message: "Failed to send verification email",
+    };
+  }
 }
