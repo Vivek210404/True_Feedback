@@ -3,7 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDebounceValue, useDebounceCallback} from "usehooks-ts";
+import { useDebounceValue, useDebounceCallback } from "usehooks-ts";
+import { signIn } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
 import * as z from "zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -107,9 +109,9 @@ const page = () => {
                   {!isCheckingUsername && usernameMessage && (
                     <p
                       className={`text-sm ${
-                        usernameMessage === 'Username is unique'
-                          ? 'text-green-500'
-                          : 'text-red-500'
+                        usernameMessage === "Username is unique"
+                          ? "text-green-500"
+                          : "text-red-500"
                       }`}
                     >
                       {usernameMessage}
@@ -126,7 +128,9 @@ const page = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <Input {...field} name="email" />
-                  <p className='text-muted text-gray-400 text-sm'>We will send you a verification code</p>
+                  <p className="text-muted text-gray-400 text-sm">
+                    We will send you a verification code
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
@@ -143,21 +147,37 @@ const page = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className='w-full' disabled={isSubmitting}>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Please wait
                 </>
               ) : (
-                'Sign Up'
+                "Sign Up"
               )}
+            </Button>
+
+            <div className="relative flex items-center py-2">
+              <div className="flex-grow border-t" />
+              <span className="px-2 text-gray-500 text-sm">or</span>
+              <div className="flex-grow border-t" />
+            </div>
+
+            <Button
+              type="button"
+              className="w-full border flex items-center justify-center gap-2"
+              variant="outline"
+              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            >
+              <FcGoogle className="text-xl" />
+              Continue with Google
             </Button>
           </form>
         </Form>
         <div className="text-center mt-4">
           <p>
-            Already a member?{' '}
+            Already a member?{" "}
             <Link href="/sign-in" className="text-blue-600 hover:text-blue-800">
               Sign in
             </Link>

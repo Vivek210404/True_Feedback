@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { signInSchema } from "@/schemas/signInSchema";
 import { signIn } from "next-auth/react";
+import { FaGoogle } from "react-icons/fa";
 
 const page = () => {
   const router = useRouter();
@@ -45,6 +46,10 @@ const page = () => {
       toast.success("Logged in successfully");
       router.replace("/dashboard");
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    await signIn("google", { callbackUrl: "/dashboard" });
   };
 
   return (
@@ -86,6 +91,15 @@ const page = () => {
             </Button>
           </form>
         </Form>
+        <div className="flex items-center gap-3 my-4">
+          <div className="flex-grow h-px bg-gray-300" />
+          <span className="text-gray-500 text-sm">OR</span>
+          <div className="flex-grow h-px bg-gray-300" />
+        </div>
+        <Button onClick={handleGoogleLogin} variant="outline" className="w-full flex gap-2">
+          <FaGoogle size={18} />
+          Sign in with Google
+        </Button>
         <div className="text-center mt-4">
           <p>
             Not a member yet?{" "}
