@@ -18,7 +18,7 @@ import { signInSchema } from "@/schemas/signInSchema";
 import { signIn } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   //zod implementation
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -113,4 +113,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
